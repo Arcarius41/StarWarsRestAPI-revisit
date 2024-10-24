@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Planet, Character
 #from models import Person
 
 app = Flask(__name__)
@@ -41,6 +41,36 @@ def handle_hello():
 
     response_body = {
         "msg": "Hello, this is your GET /user response "
+    }
+
+    return jsonify(response_body), 200
+
+@app.route('/characters', methods=['GET'])
+def get_all_characters():
+    characters = Character.query.all()
+    # serialized_characters = []
+    # for character in characters:
+    #     serialized_characters.append(character.serialize())
+    ## ALternative way to do the same thing = the above 3 lines
+    serialized_characters = list(map(lambda character: character.serialize(), characters))
+
+    response_body = {
+        "msg": "Here is your list of characters", "characters": serialized_characters
+    }
+
+    return jsonify(response_body), 200
+
+@app.route('/planets', methods=['GET'])
+def get_all_planets():
+    planets = Planet.query.all()
+    # serialized_planets = []
+    # for character in planets:
+    #     serialized_planets.append(planets.serialize())
+    ## ALternative way to do the same thing = the above 3 lines
+    serialized_planets = list(map(lambda planets: planets.serialize(), planets))
+
+    response_body = {
+        "msg": "Here is your list of planets", "planets": serialized_planets
     }
 
     return jsonify(response_body), 200
